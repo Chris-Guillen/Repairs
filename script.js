@@ -1,3 +1,31 @@
+const navToggle = document.querySelector('.nav-toggle');
+const navMenu = document.querySelector('#site-nav');
+
+function setNavOpen(isOpen) {
+    if (!navToggle || !navMenu) return;
+    navMenu.classList.toggle('is-open', isOpen);
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+}
+
+if (navToggle && navMenu) {
+    navToggle.addEventListener('click', () => {
+        setNavOpen(navToggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            setNavOpen(false);
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            setNavOpen(false);
+        }
+    });
+}
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -8,6 +36,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 behavior: 'smooth',
                 block: 'start'
             });
+        }
+        if (navMenu && navMenu.contains(this)) {
+            setNavOpen(false);
         }
     });
 });
